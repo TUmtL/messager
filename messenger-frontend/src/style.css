@@ -1,0 +1,120 @@
+html,
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html {
+  max-height: 100%;
+  overflow: hidden;
+}
+
+
+html,
+ul,
+ol,
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: normal;
+  list-style-type: none;
+}
+
+body {
+  max-height: 100vh;
+}
+
+.container {
+  max-width: 1100px;
+  padding: 0 25px;
+  margin: 0 auto;
+}
+
+.bottom {
+  height: 67vh;
+}
+
+.top,
+.bottom {
+  padding: 20px 0 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom__left {
+  flex-basis: 300px;
+  margin-right: 20px;
+}
+
+.bottom__right {
+  padding: 0px 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  position: relative;
+  /* height: 65vh; */
+  max-height: 65vh;
+}
+.accaunt{
+  overflow: hidden;
+}
+.messager {
+  display: flex;
+  flex-direction: column;
+  max-height: 92%;
+  overflow-y: auto;
+  margin-bottom: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.message-body.midle .author {
+  display: none;
+}
+
+.message-body {
+  background-color: rgb(165, 165, 165);
+  padding: 4px;
+  margin-bottom: 2px;
+  border-radius: 10px;
+}
+
+.messager-form {}
+
+.messager-list {
+  max-height: 100%;
+  overflow-y: auto;
+}
+/* messages styles */
+.messager-name {
+  z-index: 4;
+}
+.message-body {
+  position: relative;
+  align-self: flex-start;
+}
+.server-message{
+  align-self: center;
+  background-color: gray;
+  opacity: 0.5;
+}
+.my-message{
+  align-self: flex-end;
+  background-color: rgb(133, 133, 133);
+}
+.message-popup{
+  background: red;
+  display: block;
+}
