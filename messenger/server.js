@@ -3,6 +3,7 @@ const { Server } = require('socket.io')
 const express = require('express')
 const path = require('path')
 const cors = require('cors')
+const multer = require('multer')
 // const fs = require('fs')
 const app = express()
 const httpServer = createServer(app)
@@ -13,11 +14,29 @@ const io = new Server(httpServer, {
 })
 const accaunts = [{ name: 'admin', status: 'admin', login: 'adminadmin', password: 'adminadmin', id: 0, messagesIDList: [], path: "admin/0" }]
 const messagesList = [{ id: -1, name: 'ONLY FOR TEST', messages: [{ id: -1, author: 'server', message: 'CREATED' }], localAdmin: [], path: 'messager/-1', whiteList: true, whiteListCollection: ['admin/0'] }]
-const dirip = '127.0.0.1:3001'
+
+const dirip = '26.118.49.40:3001'
 
 app.use(cors())
-app.use(express.static(path.relative(__dirname, 'project-nadzor')))
+app.use(express.static(path.relative(__dirname, 'messenger' ,)))
 app.use(express.json())
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.split(' ').join('-'))
+  },
+  
+})
+// добавь возможность добовлять фото в чатах а так же в методе post/upload делать запрос в какие сообщения добовлять ссылку на изоброжение
+const upload = multer({storage:storage})
+ app.get('/image/:name' , (req , res) => {
+  res.sendFile(path.resolve(__dirname , 'uploads' , req.params.name))
+ })
+app.post('/upload' , upload.single('file'), (req , res)=>{
+  res.json(req.file)
+})
 io.on('connection', (socket) => {
   messagesList.forEach(el => {
     socket.emit(`messagers/${el.id}`, el)
@@ -55,7 +74,7 @@ io.on('connection', (socket) => {
       socket.broadcast.emit(`messagers/${res.messagerId}` , messager)
       console.log('delite')
     } else {
-      console.log('u power lower than 10M')
+      console.log('ur power lower than 10M')
     } 
   })
   socket.on('messager/edit' , (res)=>{
@@ -81,6 +100,7 @@ app.post('/messager/:id', (req, res) => {
 app.post('/messager', (req, res) => {
   const accaunt = accaunts.find(el => el.path == req.body.authorPath)
   if (req.body.method == 'get') {
+    //blaklist
     const messager = messagesList.find(el => el.id == req.body.findId)
     console.log([accaunt, messager])
     if (messager?.whiteList) {
@@ -97,6 +117,7 @@ app.post('/messager', (req, res) => {
   }
   if (req.body.method == 'create') {
     const id = messagesList[messagesList.length - 1].id + 1
+    //blaklist
     messagesList.push({ name: req.body.findId, id, messages: [{ author: 'server', id: 0, message: 'CHAT CREATED' }], localAdmin: [`${req.body.authorPath}`], path: `messager/${id}`, whiteList: req.body.whiteList, whiteListCollection: req.body.whiteListCollection, adminsWriteOnly: req.body.adminsWriteOnly })
     accaunt.messagesIDList.push(id)
     // console.log(req.body)
@@ -128,6 +149,8 @@ app.get(`/:name/:id`, (req, res) => {
   res.json(accaunts.find(el => { return el['name'] == req.params['name'] && el['id'] == req.params['id'] }))
 })
 
-httpServer.listen(3001, () => console.log('server launched, server path => 127.0.0.1:3001'))
+
+
+httpServer.listen(3001, () => console.log('server launched, server path => 26.118.49.40:3001'))
 
          

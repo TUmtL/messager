@@ -4,7 +4,7 @@ export default defineStore('test' , {
   state(){
     return{
       accaunt:{},
-      ref:'http://127.0.0.1:3001/',
+      ref:'http://26.118.49.40:3001/',
       counter:0,
       router:useRouter()
     }

@@ -56,7 +56,7 @@ import storeR from "../store";
 import { useRoute } from "vue-router";
 import { io } from "socket.io-client";
 
-const socket = io("127.0.0.1:3001");
+const socket = io("26.118.49.40:3001");
 socket.on("test", res => console.log(res));
 
 const store = ref(storeR());
