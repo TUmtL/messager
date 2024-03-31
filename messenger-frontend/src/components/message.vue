@@ -6,6 +6,7 @@
     </div>
     <h6 class="author">{{ message.author }}</h6>
     <p class="message">{{ message.message }}</p>
+    <img v-if="props.message.image != null" :src="'http://127.0.0.1:3001/image/' + props.message.image" alt="">
   </div>
 </template>
 

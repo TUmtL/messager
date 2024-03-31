@@ -35,8 +35,8 @@ const upload = multer({storage:storage})
   res.sendFile(path.resolve(__dirname , 'uploads' , req.params.name))
  })
 app.post('/upload' , upload.single('file'), (req , res)=>{
-  res.json(req.file)
-})
+  res.json({...req.file , path:'127.0.0.1:3001/image/' + req.file.filename})
+}) 
 io.on('connection', (socket) => {
   messagesList.forEach(el => {
     socket.emit(`messagers/${el.id}`, el)
@@ -83,13 +83,14 @@ io.on('connection', (socket) => {
     one.whiteList = res.whiteList
     one.whiteListCollection = res.whiteListCollection
     one.adminsWriteOnly = res.adminsWriteOnly
+    one.blackList = res.blackList
     socket.emit(`messagers/${res.id}`, one)
     socket.broadcast.emit(`messagers/${res.id}`, one)
     console.log( one , `messagers/${res.id}`)
   })
 })
 app.get('/messager/:id', (req, res) => {
-  res.json(messagesList.find(el => el.id == req.params.id))
+  res.json(messagesList.find(el => el.id == req.params.id)) 
 })
 app.post('/messager/:id', (req, res) => {
   const test = messagesList.find(el => el.id == req.params.id) 
@@ -104,7 +105,13 @@ app.post('/messager', (req, res) => {
     const messager = messagesList.find(el => el.id == req.body.findId)
     console.log([accaunt, messager])
     if (messager?.whiteList) {
-      if (messager.localAdmin.find(el => el == accaunt.path) != null || accaunt.status == 'admin' || messager.whiteListCollection.find(el => el == accaunt.path) != null) {
+      if ((messager.localAdmin.find(el => el == accaunt.path) != null || accaunt.status == 'admin' || messager.whiteListCollection.find(el => el == accaunt.path) != null)) { 
+        accaunt.messagesIDList.push(messager.id)
+        accaunt.messagesIDList = [...new Set(accaunt.messagesIDList)]
+        res.json(accaunt.messagesIDList)
+      }
+    } else if(messager?.blackList.length > 0){
+      if(messager.blackList.find(el => el == accaunt.path) == null || accaunt.status == 'admin'){
         accaunt.messagesIDList.push(messager.id)
         accaunt.messagesIDList = [...new Set(accaunt.messagesIDList)]
         res.json(accaunt.messagesIDList)
@@ -118,7 +125,7 @@ app.post('/messager', (req, res) => {
   if (req.body.method == 'create') {
     const id = messagesList[messagesList.length - 1].id + 1
     //blaklist
-    messagesList.push({ name: req.body.findId, id, messages: [{ author: 'server', id: 0, message: 'CHAT CREATED' }], localAdmin: [`${req.body.authorPath}`], path: `messager/${id}`, whiteList: req.body.whiteList, whiteListCollection: req.body.whiteListCollection, adminsWriteOnly: req.body.adminsWriteOnly })
+    messagesList.push({ name: req.body.findId, id, messages: [{ author: 'server', id: 0, message: 'CHAT CREATED' }], localAdmin: [`${req.body.authorPath}`], path: `messager/${id}`, whiteList: req.body.whiteList, whiteListCollection: req.body.whiteListCollection, adminsWriteOnly:req.body.adminsWriteOnly, blackList:[] })
     accaunt.messagesIDList.push(id)
     // console.log(req.body)
     res.json(accaunt.messagesIDList)

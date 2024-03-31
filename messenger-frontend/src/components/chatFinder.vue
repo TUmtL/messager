@@ -39,7 +39,7 @@ async function getOrCreate(method) {
       authorSatus: store.value.accaunt.status,
       whiteList:whiteList.value,
       whiteListCollection:whiteListCollection.value.split(' '),
-      adminsWriteOnly:adminsWriteOnly.value
+      adminsWriteOnly:adminsWriteOnly.value,
     })
   })
     .then(res => (res = res.json()))
