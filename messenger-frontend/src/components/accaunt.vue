@@ -43,6 +43,7 @@
           <div class="detecter"></div>
           <messageOne
             @remove="(e) => remove(e)"
+            @edit="(e)=>edit(e)"
             :class="{
               'my-message': one.author == store.accaunt.path,
               'server-message': one.author == 'server',
@@ -121,6 +122,14 @@ function remove(e) {
     messagerId: curentMessage.value.id,
     whoRemove: store.value.accaunt.path,
   });
+} 
+function edit(e){
+  const body = {
+    ...e,
+    messagerId: curentMessage.value.id,
+    whoEdit: store.value.accaunt.path,
+  }
+  socket.emit('message/edit' , body)
 }
 console.log(
   `${store.value.ref}${useRoute().params.name}/${useRoute().params.id}`

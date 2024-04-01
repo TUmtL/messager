@@ -28,7 +28,7 @@ export default defineStore('test' , {
         })
       }
     },
-    find
+    
   },
 
 })

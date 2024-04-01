@@ -88,6 +88,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit(`messagers/${res.id}`, one)
     console.log( one , `messagers/${res.id}`)
   })
+  socket.on('message/edit' , (res)=>{
+    const messager = messagesList.find(el => el.id == res.messagerId)
+    const message = messager.messages.find(el => el.id == res.id)
+    if(res.whoEdit == message.author){
+      message.message = res.value
+      message.redact = true
+      socket.emit(`messagers/${messager.id}`, messager)
+      socket.broadcast.emit(`messagers/${messager.id}`, messager)
+    }
+  })
 })
 app.get('/messager/:id', (req, res) => {
   res.json(messagesList.find(el => el.id == req.params.id)) 
