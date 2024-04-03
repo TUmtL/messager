@@ -15,18 +15,19 @@
       <button @click="sendEdit()">done</button>
       <button @click="editChange()">cancel</button>
     </div>
-    <img v-if="props.message.image != null" :src="'http://127.0.0.1:3001/image/' + props.message.image" alt="">
+    <img loading="lazy" v-if="props.message.image != null && hold != true" :src="'http://127.0.0.1:3001/image/' + props.message.image" alt="">
   </div>
 </template>
 
 <script setup>
-import { defineProps , ref , defineEmits } from 'vue';
+import { defineProps , h, ref  } from 'vue';
 import storer from '../store';
 const props =  defineProps({message:Object , messagerId:Number})
 const emits = defineEmits({'remove':Object , 'edit':Object})
 const store = ref(storer())
 const popup = ref(false)
 const edit = ref(false)
+const hold = ref(true)
 const editValue = ref('')
 function editChange(){
   edit.value = !edit.value
@@ -47,6 +48,9 @@ function popdown(){
     popup.value = false
   } , 1000)}
 }
+setTimeout(()=>{
+  hold.value = false
+} , 300)
 </script>
 
 <style>

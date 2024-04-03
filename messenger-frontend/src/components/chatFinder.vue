@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref , defineProps} from "vue";
+import { ref} from "vue";
 import storeR from "../store";
 const props = defineProps(['socket'])
 const store = ref(storeR());

@@ -37,7 +37,7 @@ store.value.accaunt.messagesIDList= []
 async function registrate() {
   if(test.value.name.split('').find(el => el == ' ') == null){
       try {
-    const raw = await fetch("http://26.118.49.40:3001/signin", {
+    const raw = await fetch("http://127.0.0.1:3001/signin", {
       method: "POST",
       headers: {
         "Content-type": "application/json; charset=UTF-8"
@@ -54,7 +54,7 @@ async function registrate() {
 }
 async function logining() {
   try {
-    const raw = await fetch("http://26.118.49.40:3001/login", {
+    const raw = await fetch("http://127.0.0.1:3001/login", {
       method: "POST",
       headers: {
         "Content-type": "application/json; charset=UTF-8"

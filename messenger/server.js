@@ -6,7 +6,9 @@ const cors = require('cors')
 const multer = require('multer')
 // const fs = require('fs')
 const app = express()
+app.use(cors())
 const httpServer = createServer(app)
+
 const io = new Server(httpServer, {
   cors: {
     methods: ["GET", 'POST', "PATCH"],
@@ -15,9 +17,9 @@ const io = new Server(httpServer, {
 const accaunts = [{ name: 'admin', status: 'admin', login: 'adminadmin', password: 'adminadmin', id: 0, messagesIDList: [], path: "admin/0" }]
 const messagesList = [{ id: -1, name: 'ONLY FOR TEST', messages: [{ id: -1, author: 'server', message: 'CREATED' }], localAdmin: [], path: 'messager/-1', whiteList: true, whiteListCollection: ['admin/0'] }]
 
-const dirip = '26.118.49.40:3001'
+const dirip = '127.0.0.1:3001'
 
-app.use(cors())
+
 app.use(express.static(path.relative(__dirname, 'messenger' ,)))
 app.use(express.json())
 const storage = multer.diskStorage({
@@ -62,8 +64,8 @@ io.on('connection', (socket) => {
       one.messages.push(ress)
       socket.emit(`messagers/${res}`, one)
       socket.broadcast.emit(`messagers/${res}`, one) 
-    })
-  })
+    }) 
+  }) 
   socket.on('remove/message' , (res)=>{
     const messager = messagesList.find(el =>el.id == res.messagerId)
     const isALocalAdmin = messager.localAdmin.find(el => el == res.whoRemove)
@@ -86,7 +88,7 @@ io.on('connection', (socket) => {
     one.blackList = res.blackList
     socket.emit(`messagers/${res.id}`, one)
     socket.broadcast.emit(`messagers/${res.id}`, one)
-    console.log( one , `messagers/${res.id}`)
+    // console.log( one , `messagers/${res.id}`)
   })
   socket.on('message/edit' , (res)=>{
     const messager = messagesList.find(el => el.id == res.messagerId)
@@ -165,9 +167,11 @@ app.post('/login', (req, res) => {
 app.get(`/:name/:id`, (req, res) => {
   res.json(accaunts.find(el => { return el['name'] == req.params['name'] && el['id'] == req.params['id'] }))
 })
+app.put('/leave' , (req , res) =>{
+  const user = accaunts.find(el => el.path == req.body.whoOut)
+  user.messagesIDList = user.messagesIDList.filter(el => el != req.body.messagerId)
+  console.log(req.body , user)
+})
 
 
-
-httpServer.listen(3001, () => console.log('server launched, server path => 26.118.49.40:3001'))
-
-         
+httpServer.listen(3001, () => console.log('server launched, server path => 127.0.0.1:3001'))

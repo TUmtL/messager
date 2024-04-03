@@ -34,7 +34,7 @@
           {{ curentMessage?.path }}
         </p>
         <chatSlider
-          @leave="(res) => console.log(res)"
+          @leave="(res) => leave(res)"
           :socket="socket"
           :curentMessage="curentMessage"
           :active="chatSliderStatus"
@@ -86,7 +86,7 @@ import storeR from "../store";
 import { useRoute } from "vue-router";
 import { io } from "socket.io-client";
 
-const socket = io("26.118.49.40:3001");
+const socket = io("127.0.0.1:3001");
 socket.on("test", (res) => console.log(res));
 
 const store = ref(storeR());
@@ -123,6 +123,22 @@ function remove(e) {
     whoRemove: store.value.accaunt.path,
   });
 } 
+function leave(e){
+  console.log(e)
+  fetch('http://127.0.0.1:3001/leave' , {
+    method:'PUT',
+    body:JSON.stringify(e),
+    headers:{
+      "Content-Type":"application/json"
+    }
+  })
+  socket.removeAllListeners(`messagers/${e.messagerId}`)
+  messages.value = messages.value.filter(el=> el.id != e.messagerId)
+  store.value.accaunt.messagesIDList = store.value.accaunt.messagesIDList.filter(el=> el != e.messagerId)
+  localStorage.setItem('accaunt' , JSON.stringify(store.value.accaunt) )
+  chatSliderStatus.value[0] = false
+  // console.log(store.value.accaunt.messagesIDList)
+}
 function edit(e){
   const body = {
     ...e,
@@ -194,6 +210,7 @@ async function sendMessage() {
         image: image.value.name.split(" ").join("-"),
       });
       const file = new FormData();
+      
       file.set("file", image.value);
       fetch("http://127.0.0.1:3001/upload", {
         method: "POST",

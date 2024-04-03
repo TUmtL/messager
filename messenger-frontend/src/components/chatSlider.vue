@@ -12,9 +12,10 @@
         <p>белый лист <input type="checkbox" v-model="props.curentMessage.whiteList"></p>
         <p>пишут только админы <input type="checkbox" v-model="props.curentMessage.adminsWriteOnly"></p>
         <button type="submit">редактировать</button>
-        <button @click="leave()">выйти с чата</button>
+        
       </form>
     </div>
+    <button @click="leave()">выйти с чата</button>
   </div>
 </template>
 
@@ -30,7 +31,7 @@ const localAdminRedact = ref("");
 const localAdmin = computed(() => {
   return [props.curentMessage.localAdmin];
 });
-const whiteListCollectionRedact = ref("");
+const whiteListCollectionRedact = ref(""); 
 const whiteListCollection = computed(() => {
   return [props.curentMessage.whiteListCollection];
 });
@@ -79,8 +80,18 @@ function redact() {
   // router.go(0)
 }
 function leave(){
-  emit('leave' , 'leave')
+  emit('leave' , {messagerId:props.curentMessage.id, whoOut:store.value.accaunt.path })
 }
+const hasBeenBan = computed(()=>{
+  if(props.curentMessage != null){
+    return props.curentMessage?.blackList?.find(el => el == store.value.accaunt.path) != undefined
+  }
+})
+watch(()=> hasBeenBan.value , ()=>{
+  if(hasBeenBan.value) {
+    leave()
+  }
+} , {deep:true})
 </script>
 
 <style>
