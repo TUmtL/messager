@@ -2,6 +2,7 @@
   <!-- <button @click="store.testAcc()"></button> -->
   <div class="container">
     <router-view></router-view>
+    
   </div>
 </template>
 

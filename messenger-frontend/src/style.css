@@ -8,6 +8,7 @@ html,
 html {
   max-height: 100%;
   overflow: hidden;
+  word-break: break-all;
 }
 img , svg {
   max-width: 100%;
@@ -64,7 +65,7 @@ body {
   flex-direction: column;
   flex-basis: 100%;
   position: relative;
-  /* height: 65vh; */
+  max-width: 100%;
   max-height: 65vh;
 }
 .accaunt{
@@ -76,6 +77,7 @@ body {
   max-height: 92%;
   overflow-y: auto;
   margin-bottom: auto;
+  max-width: 100%;
 }
 
 .hide {
@@ -127,4 +129,49 @@ body {
 }
 .img-preview{
   max-width: 200px;
+}
+.chat-slider-nav{
+  display: flex;
+  gap: 6px;
+  padding: 0 20px;
+}
+.chat-slider-choose {
+  padding: 4px;
+  border: 1px solid black;
+  background-color: gray;
+}
+.chat-slider-choose.curent{
+  border-bottom: none;
+}
+.chat-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: gray;
+  z-index: 3;
+  transition: transform 0.3s ease-in-out;
+  padding: 20px 0;
+  transform: translateX(102%);
+}
+.chat-slider-body{
+  padding: 0 20px;
+  padding-top: 10px;
+  border-top: 1px solid;
+  margin-top: -1px;
+}
+.chat-slider-body.media{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 98%;
+}
+.chat-slider-body.media::-webkit-scrollbar{
+  background-color: gray;
+}
+.chat-slider-body.media::-webkit-scrollbar-thumb{
+  border: 1px solid;
+  border-radius: 20px;
 }

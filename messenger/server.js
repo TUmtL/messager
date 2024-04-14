@@ -48,13 +48,9 @@ io.on('connection', (socket) => {
   messagesList.forEach(el => {
     socket.on(`messagers/send/${el.id}`, (res) => {
       const one = messagesList.find(Fel => Fel.id == el.id)
-
       one.messages.push({...res })
-      // one.messages.push(res)
       socket.emit(`messagers/${el.id}`, el)
       socket.broadcast.emit(`messagers/${el.id}`, el)
-      console.log(`messagers/send/${el.id}`)
-      // console.log(res , `messagers/send/${el.id}`)
     })
   })
   socket.on('create', (res) => { 

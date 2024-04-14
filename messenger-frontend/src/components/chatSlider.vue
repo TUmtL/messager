@@ -1,21 +1,30 @@
 <template>
   <div class="chat-slider">
-    options
-    <p>whiteList: {{ props.curentMessage.whiteList }}</p>
-    <p>adminsWriteOnly : {{ props.curentMessage.adminsWriteOnly }}</p>
-    <div v-if="localStatusCheck" class="options">
-      <form @submit.prevent="redact()">
-        <p>local admins<input v-model="localAdminRedact" type="text"></p>
-        <p>заполняйте по форме 'имя/айди,имя/айди'</p>
-        <p>white list<input v-model="whiteListCollectionRedact" type="text"></p>
-        <p>black list<input v-model="blackListCollectionRedact" type="text"></p>
-        <p>белый лист <input type="checkbox" v-model="props.curentMessage.whiteList"></p>
-        <p>пишут только админы <input type="checkbox" v-model="props.curentMessage.adminsWriteOnly"></p>
-        <button type="submit">редактировать</button>
-        
-      </form>
+    <nav class="chat-slider-nav">
+      <p :class="{'chat-slider-choose':true , 'curent':tab == 'options'}" @click="tab = 'options'">options</p>
+      <p :class="{'chat-slider-choose':true , 'curent':tab == 'media'}" @click="tab = 'media'">media</p>
+    </nav>
+    <div class="chat-slider-body options" v-if="tab == 'options'">
+      <p>whiteList: {{ props.curentMessage.whiteList }}</p>
+      <p>adminsWriteOnly : {{ props.curentMessage.adminsWriteOnly }}</p>
+      <div v-if="localStatusCheck" class="options">
+        <form @submit.prevent="redact()">
+          <p>local admins<input v-model="localAdminRedact" type="text"></p>
+          <p>заполняйте по форме 'имя/айди,имя/айди'</p>
+          <p>white list<input v-model="whiteListCollectionRedact" type="text"></p>
+          <p>black list<input v-model="blackListCollectionRedact" type="text"></p>
+          <p>белый лист <input type="checkbox" v-model="props.curentMessage.whiteList"></p>
+          <p>пишут только админы <input type="checkbox" v-model="props.curentMessage.adminsWriteOnly"></p>
+          <button type="submit">редактировать</button>
+          
+        </form>
+      </div>
+      <button @click="leave()">выйти с чата</button>
     </div>
-    <button @click="leave()">выйти с чата</button>
+    <div class="chat-slider-body media" v-if="tab == 'media'">
+      <div v-if="media.length == 0">there no media</div>
+      <img v-for="one of media" :src="'http://127.0.0.1:3001/image/' + one.image" alt="">
+    </div>
   </div>
 </template>
 
@@ -27,6 +36,7 @@ const props = defineProps(["socket", "active", "curentMessage"]);
 const emit = defineEmits(['leave'])
 const router = useRouter()
 const store = ref(storer());
+const tab = ref('options')
 const localAdminRedact = ref("");
 const localAdmin = computed(() => {
   return [props.curentMessage.localAdmin];
@@ -53,7 +63,7 @@ watch(
     } else {
       document.querySelector(
         ".chat-slider"
-      ).style.transform = `translateX(100% )`;
+      ).style.transform = `translateX(102% )`;
     }
   }
 );
@@ -92,19 +102,10 @@ watch(()=> hasBeenBan.value , ()=>{
     leave()
   }
 } , {deep:true})
+const media = computed(()=>{
+  let arr = []
+  arr = props.curentMessage?.messages.filter((el)=> el?.image != undefined)
+  return [...new Set(arr)] 
+})
 </script>
 
-<style>
-.chat-slider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: gray;
-  z-index: 3;
-  transition: transform 0.3s ease-in-out;
-  padding: 20px;
-  transform: translateX(100%);
-}
-</style>

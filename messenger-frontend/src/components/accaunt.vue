@@ -16,6 +16,7 @@
             @click="
               () => {
                 path = one.path;
+                messageMultiplaer = 1
                 scrollDown();
               }
             "
@@ -44,6 +45,7 @@
           <messageOne
             @remove="(e) => remove(e)"
             @edit="(e)=>edit(e)"
+            @firstLoad="(e)=>messageMultiplaer == 1 ? scrollDown() : null"
             :class="{
               'my-message': one.author == store.accaunt.path,
               'server-message': one.author == 'server',
@@ -67,9 +69,9 @@
               name=""
               id=""
             />
-            <p>image.img p.s я не дружу с кирилицой</p></label
+            <p>добавить фото</p></label
           >
-          <button @click="sendMessage()"></button>
+          <button @click="sendMessage()">отправить сообщение</button>
         </form>
       </div>
     </div>
@@ -94,7 +96,6 @@ const accaunt = ref({});
 const message = ref("");
 const path = ref("");
 const messages = ref([]);
-const taker = ref([]);
 const chatSliderStatus = ref([false]);
 const messageMultiplaer = ref(1);
 const image = ref("");
@@ -191,7 +192,7 @@ function scrollDown() {
     () =>
       document
         .querySelector(".messager")
-        .scrollTo(0, document.querySelector(".messager").scrollHeight + 1211),
+        .scrollTo(0, document.querySelector(".messager").scrollHeight + 19999),
     10
   );
 }
