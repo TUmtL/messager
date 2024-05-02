@@ -169,6 +169,17 @@ app.put('/leave' , (req , res) =>{
   user.messagesIDList = user.messagesIDList.filter(el => el != req.body.messagerId)
   console.log(req.body , user)
 })
-
-
+app.get('/info/:name/:id' , (req, res) =>{
+  const user = accaunts.find(el => el.id == req.params.id)
+  res.json({name:user.name , status:user.status , path:user.path , date:user.date})   
+})
+app.post('/edit/:name/:id' , (req , res)=>{
+  const accaunt = accaunts.find(el => el.path == req.body.whoEdit && el.password == req.body.whoEditPassword)
+  if(accaunt != undefined && accaunts.find(el => el.login == req.body.login) == undefined && req.body.login.length > 4 && req.body.password.length > 6) {
+    accaunt.password = req.body.password
+    accaunt.login = req.body.login
+    res.json({login:accaunt.login , password:accaunt.password, status:"ok"})
+  } else res.json({login:'error' , password:'error', status:"bad"})
+  console.log(req.body , accaunt)
+})
 httpServer.listen(3001, () => console.log('server launched, server path => 127.0.0.1:3001'))

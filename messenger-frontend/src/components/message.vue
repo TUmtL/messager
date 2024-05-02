@@ -1,11 +1,14 @@
 <template>
   <div @mouseleave="popdown()" @click.right.prevent="popup = !popup" class="message-body">
+    <div>
+      <button v-if="message.author != 'server'" @click="accauntTaker()" :class="{'message-popup':popup , 'hide':true}"> show profile</button>
+    </div>
     <div v-if="message.author != 'server' && message.author == store.accaunt.path" :class="{'message-popup':popup , 'hide':true}">
       <button @click="editChange()">edit</button>
       <button @click="remove()">remove</button>
     </div>
     <div v-if="edit == false">
-    
+      <div class="dev">{{ message.id }}</div>
       <h6 class="author">{{ message.author }}</h6>
       <p class="message">{{ message.message }}</p>
       <p v-if="message.redact == true">редактированно</p>
@@ -23,7 +26,7 @@
 import { defineProps , h, ref  } from 'vue';
 import storer from '../store';
 const props =  defineProps({message:Object , messagerId:Number})
-const emits = defineEmits({'remove':Object , 'edit':Object , 'firstLoad':String})
+const emits = defineEmits({'remove':Object , 'edit':Object , 'firstLoad':String , 'accauntTaker':Object})
 const store = ref(storer())
 const popup = ref(false)
 const edit = ref(false)
@@ -34,6 +37,9 @@ function editChange(){
   if(edit.value) {
     editValue.value = ''
   }
+}
+function accauntTaker() {
+  emits('accauntTaker' , {author:props.message.author})
 }
 function remove() {
   emits('remove' , {author:props.message.author , message:props.message.message , id:props.message.id})

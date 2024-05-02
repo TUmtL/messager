@@ -10,7 +10,6 @@
     </form>
     <form v-else @submit.prevent="logining()">
       log in
-      <input placeholder="name" v-model="test.name" type="text" />
       <input placeholder="login" v-model="test.login" type="text" />
       <input placeholder="password" v-model="test.password" type="text" />
       <button type="submit">send</button>

@@ -57,6 +57,8 @@ body {
 .bottom__left {
   flex-basis: 300px;
   margin-right: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .bottom__right {
@@ -174,4 +176,18 @@ body {
 .chat-slider-body.media::-webkit-scrollbar-thumb{
   border: 1px solid;
   border-radius: 20px;
+}
+.accaunt-slider{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  background-color: gray;
+}
+.accaunt-slider.active{
+  transform: translateX(0);
 }
